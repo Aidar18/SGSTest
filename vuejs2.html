@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<body>
+    <div id="app"></div>
+</body>
+<script>
+new Vue({
+    el: '#app',
+    template: `
+        <div class="cascading-dropdown">
+            <div class="dropdown">
+                <span>Город:</span>
+                <select v-model="selectedCity">
+                    <option value="">Выберите Город</option>
+                    <option v-for="(city_obj, city) in collection" :value="city">{{city}}</option>
+                </select>
+            </div>
+            <div class="dropdown">
+                <span>Цех:</span>
+                <select :disabled="shops.length == 0" v-model="selectedShop">
+                    <option value="">Выберите Цех</option>
+                    <option v-for="(shop_obj, shop) in shops">{{shop}}</option>
+                </select>
+            </div>
+            <div class="dropdown">
+                <span>Сотрудник:</span>
+                <select :disabled="employees.length == 0" v-model="selectedCity">
+                    <option value="">Выберите Сотрудника</option>
+                    <option v-for="employee in employees">{{employee}}</option>
+                </select>
+            </div>
+        </div>
+    `,
+    data: function() {
+        return {
+            collection: {
+                "Алматы": {
+                    "Алматы_1": ["Иванов", "Искендиров"],
+                    "Алматы_2": ["Синицын", "Кузнецов"],
+                    "Алматы_3": ["Попов", "Васильев"],
+                },
+                "Астана": {
+                    "Астана_1": ["Соколов", "Николаев"],
+                    "Астана_2": ["Сидоров", "Лазарев"],
+                    "Астана_3": ["Карпов", "Сафонов"]
+                },
+				"Актау": {
+                    "Актау_1": ["Вишняков", "Зыков"],
+                    "Актау_2": ["Щукин", "Бирюков"],
+                    "Актау_3": ["Маслов", "Жуков"]
+                }
+            },
+            shops: [],
+            employees: [],
+            selectedCity: "",
+            selectedShop: "",
+            selectedEmployee: ""
+        }
+    },
+	watch: {
+        selectedCity: function() {
+            // Clear previously selected values
+            this.shops = [];
+            this.employees = [];
+            this.selectedShop = "";
+            this.selectedEmployee = "";
+            // Populate list of countries in the second dropdown
+            if (this.selectedCity.length > 0) {
+                this.shops = this.collection[this.selectedCity]
+            }
+        },
+        selectedShop: function() {
+            // Clear previously selected values
+            this.employees = [];
+            this.selectedEmployee = "";
+            // Now we have a continent and country. Populate list of cities in the third dropdown
+            if (this.selectedShop.length > 0) {
+                this.employees = this.collection[this.selectedCity][this.selectedShop]
+            }
+        }
+    }
+})
+</script>
+</body>
+</html>
